@@ -23,3 +23,42 @@ test('Testando cadastro de três perguntas', () => {
   expect(perguntas[2].num_respostas).toBe(0);
   expect(perguntas[1].id_pergunta).toBe(perguntas[2].id_pergunta-1);
 });
+
+test('Testando cadastro de pergunta vazia', () => {
+  modelo.cadastrar_pergunta('');
+  const pergunta = modelo.listar_perguntas(); 
+  expect(pergunta[0].texto).toBe('');
+});
+
+test('Testando cadastro de resposta', () => {
+  modelo.cadastrar_resposta(1, 'Resposta 1');
+  modelo.cadastrar_resposta(1, 'Resposta 2');
+  const respostas = modelo.get_respostas(1);
+  expect(respostas.length).toBe(2);
+  expect(respostas[0].texto).toBe('Resposta 1');
+  expect(respostas[1].texto).toBe('Resposta 2');
+});
+
+test('Testando busca de pergunta por ID', () => {
+  modelo.cadastrar_pergunta('1 + 1 = ?');
+  const perguntas = modelo.get_pergunta(1);
+  expect(perguntas.texto).toBe('1 + 1 = ?');
+});
+
+test('Testando busca de respostas por ID da pergunta', () => {
+  modelo.cadastrar_pergunta('Qual é a capital do Brasil?');
+  modelo.cadastrar_resposta(1, 'Brasília');
+  modelo.cadastrar_resposta(1, 'Rio de Janeiro');
+  const respostas = modelo.get_respostas(1);
+  expect(respostas.length).toBe(2);
+  expect(respostas[0].texto).toBe('Brasília');
+  expect(respostas[1].texto).toBe('Rio de Janeiro');
+});
+
+test('Testando contagem de respostas por ID da pergunta', () => {
+  modelo.cadastrar_pergunta('Qual é a capital do Brasil?');
+  modelo.cadastrar_resposta(1, 'Brasília');
+  modelo.cadastrar_resposta(1, 'Rio de Janeiro');
+  const numRespostas = modelo.get_num_respostas(1);
+  expect(numRespostas).toBe(2);
+});
